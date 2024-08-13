@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 const PodcastSchema = z.object({
     podcastTitle: z.string().min(2, {
@@ -16,14 +16,14 @@ const PodcastSchema = z.object({
     podcastPrompt: z.string().min(10, {
         message: "Podcast prompt must be at least 10 characters.",
     }),
-    thumbnailPrompt: z.string().min(10, {
-        message: "Thumbnail prompt must be at least 10 characters.",
+    thumbnailPrompt: z.string().min(10, { 
+        message: "Thumbnail prompt must be at least 10 characters." 
     }).optional(),
-    thumbnailImage: z.string({
-        message: "Thumbnail image is required or generate by AI.",
-    }).url().optional(),
-}).refine(data => data.thumbnailPrompt || data.thumbnailImage, {
+    thumbnailImage: z.custom<File[]>().refine(files => files.length > 0, {
+        message: "Thumbnail image is required.",
+    }).optional(),
+}).refine(data => { console.log(data); data.thumbnailPrompt !== '' || (data.thumbnailImage && data.thumbnailImage.length > 0)}, {
     message: "Either thumbnail prompt or thumbnail image is required.",
 });
 
-export default PodcastSchema
+export default PodcastSchema;

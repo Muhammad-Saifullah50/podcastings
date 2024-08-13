@@ -13,7 +13,7 @@ const FileUploader = ({ files, onChange }: FileUploaderProps) => {
         onChange(acceptedFiles)
     }, []);
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 

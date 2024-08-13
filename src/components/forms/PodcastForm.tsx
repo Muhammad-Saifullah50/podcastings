@@ -17,18 +17,36 @@ import PodcastSchema from "@/validations/PodcastSchema"
 import { Textarea } from "../ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
-import Image from "next/image"
 import FileUploader from "../FileUploader"
+import { generateAIThumbnail } from "@/app/actions/image.actions"
+import { useState } from "react"
+import Image from "next/image"
 
 const PodcastForm = () => {
-    {}
     const form = useForm<z.infer<typeof PodcastSchema>>({
         resolver: zodResolver(PodcastSchema),
-    })
+        defaultValues: {
+            podcastTitle: "",
+            podcastCategory: "",
+            podcastVoice: "",
+            podcastDescription: "",
+            podcastPrompt: "",
+            thumbnailPrompt: '',
+            thumbnailImage: undefined,
+        }
+    });
+
+    const [generatedImageUrl, setGeneratedImageUrl] = useState("")
 
     function onSubmit(values: z.infer<typeof PodcastSchema>) {
         console.log(values)
     }
+
+    const generateThumbnail = async (value: string) => {
+        const url = await generateAIThumbnail(value)
+        setGeneratedImageUrl(url)
+    }
+
 
     return (
         <Form {...form}>
@@ -40,9 +58,9 @@ const PodcastForm = () => {
                         <FormItem>
                             <FormLabel className="font-bold">Podcast title</FormLabel>
                             <FormControl>
-                                <Input 
-                                placeholder="Nextjs Podcast" {...field} 
-                                className="placeholder:text-light-secondary placeholder:font-normal text-white font-bold"
+                                <Input
+                                    placeholder="Nextjs Podcast" {...field}
+                                    className="placeholder:text-light-secondary placeholder:font-normal text-white font-bold"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -59,7 +77,9 @@ const PodcastForm = () => {
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select a category for your podcast" />
+                                            <SelectValue
+                                                placeholder="Select a category for your podcast"
+                                            />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -103,7 +123,7 @@ const PodcastForm = () => {
                     control={form.control}
                     name="podcastDescription"
                     render={({ field }) => (
-                        <FormItem className="font-bold">
+                        <FormItem>
                             <FormLabel className="font-bold">Podcast Description</FormLabel>
                             <FormControl>
                                 <Textarea placeholder="Write a short description for your podcast" {...field} />
@@ -132,18 +152,37 @@ const PodcastForm = () => {
                     </TabsList>
 
                     <TabsContent value="thumbnail">
-                        <FormField
-                            control={form.control}
-                            name="thumbnailPrompt"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Textarea placeholder="Write a promopt to generate a thumbnail for your podcast" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        {generatedImageUrl ? (
+                            <Image
+                                src={generatedImageUrl}
+                                width={200}
+                                height={200}
+                                alt="AI generated thumbnail"
+                            />
+                        ) : (
+                            <FormField
+                                control={form.control}
+                                name="thumbnailPrompt"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Textarea placeholder="Write a promopt to generate a thumbnail for your podcast"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <Button
+                                            type="button"
+                                            variant={'primary'}
+                                            disabled={!field.value || field.value.length < 10}
+                                            onClick={() => generateThumbnail(field.value as string)}>
+                                            Generate
+                                        </Button>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+
                     </TabsContent>
                     <TabsContent value="upload">
                         <FormField
@@ -152,7 +191,9 @@ const PodcastForm = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <FileUploader files={field.value} onChange={field.onChange}/>
+                                        <FileUploader
+                                            files={field.value}
+                                            onChange={field.onChange} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
