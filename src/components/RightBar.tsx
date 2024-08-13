@@ -1,10 +1,11 @@
-import React from 'react'
+
+
 
 const RightBar = () => {
   return (
-    <div>
-      RightBar
-    </div>
+    <aside className='hidden xl:block xl:w-1/4 bg-dark-secondary'>
+      Right bar
+    </aside >
   )
 }
 

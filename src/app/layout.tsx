@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 import { dark } from '@clerk/themes';
 import LeftBar from "@/components/LeftBar";
 import RightBar from "@/components/RightBar";
+import { ThemeProvider } from "@/providers/ThemeProvider"
 
-const inter = Inter({ subsets: ["latin"] });
+
+const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Podcastings",
@@ -26,10 +28,20 @@ export default function RootLayout({
       }}>
 
       <html lang="en">
-        <body className={`${inter.className} flex w-full`}>
-          <LeftBar />
-          {children}
-          <RightBar />
+        <body className={`${manrope.className} flex w-full h-screen overflow-hidden`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <LeftBar />
+            <section className="xl:w-1/2 w-2/3 
+            bg-dark-primary h-screen overflow-y-auto">
+              {children}
+            </section>
+            <RightBar />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
