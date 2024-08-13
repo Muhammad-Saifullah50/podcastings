@@ -25,9 +25,9 @@ const FileUploader = ({ files, onChange }: FileUploaderProps) => {
                     <Image
                         src={convertFileToUrl(files[0])}
                         alt="Uploaded file"
-                        width={1000}
-                        height={1000}
-                        className='object-contain'
+                        width={200}
+                        height={200}
+                        className='object-contain mx-auto'
                     />
                 ) : (
                     <div className='flex flex-col gap-2 p-8 border border-dashed border-dark-secondary items-center justify-center h-60'>
