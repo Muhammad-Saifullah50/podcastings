@@ -1,33 +1,31 @@
 'use server'
 
 export const generateAIThumbnail = async (prompt: string) => {
+  console.log(prompt)
+  try {
+    const url = 'https://open-ai21.p.rapidapi.com/texttoimage2';
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-rapidapi-key': process.env.RAPID_API_KEY!,
+        'x-rapidapi-host': process.env.RAPID_API_HOST!,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: prompt })
+    };
+
     try {
-            const request = await fetch(`https://api.limewire.com/api/image/generation`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'X-Api-Version': 'v1',
-                  Accept: 'application/json',
-                  Authorization: `Bearer ${process.env.LIMEWIRE_API_KEY}`,
-                },
-                body: JSON.stringify({
-                  prompt: prompt,
-                  aspect_ratio: '1:1'
-                })
-              }
-            );
-          
-            const response = await request.json();
-
-            if (!response.data[0].asset_url) {
-                return null
-            }
-            
-            return response.data[0].asset_url
-
+      const response = await fetch(url, options);
+      const result = await response.json();
+      console.log(result);
     } catch (error) {
-        console.error(error)
+      console.error(error);
     }
 
+  } catch (error) {
+    console.error(error)
+  }
+
 }
+
+https://prlabsapi.com:8005/matagimage?id=0BmGp5wnApPidu6NkfoK1723564183.5893078

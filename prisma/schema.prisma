@@ -13,10 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model Podcast {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId           String
   podcastTitle       String
-  podcastCategory    Category @relation(fields: [categoryId], references: [id])
   podcastVoice       String
   podcastDescription String
   podcastPrompt      String
@@ -30,5 +31,4 @@ model Podcast {
 model Category {
   id      String    @id @default(auto()) @map("_id") @db.ObjectId
   name    String    @unique
-  Podcast Podcast[]
 }
