@@ -1,12 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-const isProtectedRoute = createRouteMatcher(['/create-podcast'])
+const isProtectedRoute = createRouteMatcher(['/create-podcast', '/podcasts(.*)'])
 
 export default clerkMiddleware((auth, req) => {
-  if (!auth().userId && isProtectedRoute(req)) {
-
-    return auth().redirectToSignIn()
-  }
+  if (isProtectedRoute(req)) auth().protect()
 })
 
 export const config = {
