@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// user model
 
 model Podcast {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -21,7 +22,6 @@ model Podcast {
   podcastVoice       String
   podcastDescription String
   podcastPrompt      String
-  thumbnailPrompt    String?
   thumbnailImage     String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt

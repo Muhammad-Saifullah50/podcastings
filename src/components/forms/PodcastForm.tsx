@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -21,14 +22,21 @@ import FileUploader from "../FileUploader"
 import { generateAIThumbnail } from "@/app/actions/image.actions"
 import { useState } from "react"
 import Image from "next/image"
+import Loader from "../Loader"
+import { createPodcast } from "@/app/actions/podcast .actions"
 
-const PodcastForm = () => {
+interface PodcastFormProps {
+    categories: {
+        id: string
+        name: string
+    }[]
+}
+const PodcastForm = ({ categories }: PodcastFormProps) => {
     const form = useForm<z.infer<typeof PodcastSchema>>({
         resolver: zodResolver(PodcastSchema),
         defaultValues: {
             podcastTitle: "",
             podcastCategory: "",
-            podcastVoice: "",
             podcastDescription: "",
             podcastPrompt: "",
             thumbnailPrompt: '',
@@ -37,16 +45,42 @@ const PodcastForm = () => {
     });
 
     const [generatedImageUrl, setGeneratedImageUrl] = useState("")
+    const [uploadedImage, setUploadedImage] = useState(undefined)
+    const [loading, setLoading] = useState(false)
 
-    function onSubmit(values: z.infer<typeof PodcastSchema>) {
-        console.log(values)
+
+
+    async function onSubmit(values: z.infer<typeof PodcastSchema>) {
+        try {
+            setLoading(true)
+            const data = {
+                podcastTitle: values.podcastTitle,
+                podcastCategory: values.podcastCategory,
+                podcastDescription: values.podcastDescription,
+                thumbnailImage: values.thumbnailImage,
+            };
+
+            await createPodcast(data)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const generateThumbnail = async (value: string) => {
-        const url = await generateAIThumbnail(value)
-        setGeneratedImageUrl(url)
-    }
+        try {
+            setLoading(true)
+            const url = await generateAIThumbnail(value)
+            setGeneratedImageUrl(url || '')
+            form.setValue('thumbnailImage', url);
 
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     return (
         <Form {...form}>
@@ -83,34 +117,11 @@ const PodcastForm = () => {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                        <SelectItem value="m@support.com">m@support.com</SelectItem>
-                                    </SelectContent>
-                                </Select>
-
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="podcastVoice"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className="font-bold">Podcast voice</FormLabel>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a voice for your podcast" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                        <SelectItem value="m@support.com">m@support.com</SelectItem>
+                                        {categories.map((category) => (
+                                            <SelectItem key={category.id} value={category.name} >
+                                                {category.name}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
 
@@ -147,8 +158,14 @@ const PodcastForm = () => {
                 />
                 <Tabs defaultValue="thumbnail">
                     <TabsList >
-                        <TabsTrigger value="thumbnail" className="font-bold text-white">AI prompt to generate thumbnail</TabsTrigger>
-                        <TabsTrigger value="upload" className="font-bold text-white">Upload custom image</TabsTrigger>
+                        <TabsTrigger
+                            value="thumbnail"
+                            className="font-bold text-white"
+                            disabled={uploadedImage ? true : false}>AI prompt to generate thumbnail</TabsTrigger>
+                        <TabsTrigger
+                            value="upload"
+                            className="font-bold text-white"
+                            disabled={generatedImageUrl ? true : false}>Upload custom image</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="thumbnail">
@@ -158,6 +175,7 @@ const PodcastForm = () => {
                                 width={200}
                                 height={200}
                                 alt="AI generated thumbnail"
+                                className="mx-auto object-contain"
                             />
                         ) : (
                             <FormField
@@ -175,8 +193,9 @@ const PodcastForm = () => {
                                             variant={'primary'}
                                             disabled={!field.value || field.value.length < 10}
                                             onClick={() => generateThumbnail(field.value as string)}>
-                                            Generate
+                                            {loading ? <Loader size={25} /> : 'Generate'}
                                         </Button>
+                                        <FormDescription className="text-light-secondary text-sm">Due to rate limits, you can generate only once</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -192,9 +211,16 @@ const PodcastForm = () => {
                                 <FormItem>
                                     <FormControl>
                                         <FileUploader
+                                            //@ts-ignore
                                             files={field.value}
-                                            onChange={field.onChange} />
+                                            onChange={field.onChange}
+                                            uploadedImage={uploadedImage}
+                                            setUploadedImage={setUploadedImage} />
                                     </FormControl>
+                                    {uploadedImage && (
+                                        <FormDescription className="text-light-secondary text-sm">Click again to change the image</FormDescription>
+                                    )}
+
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -202,7 +228,18 @@ const PodcastForm = () => {
                     </TabsContent>
                 </Tabs>
 
-                <Button type="submit" variant={'primary'} className="w-full hover:bg-orange/90">Submit & publish podcast</Button>
+                <Button
+                    disabled={!generatedImageUrl && !uploadedImage}
+                    type="submit"
+                    variant={'primary'}
+                    className="w-full">
+                    {loading ? <Loader size={25} /> : 'Submit & publish podcast'}
+                </Button>
+
+                {!generatedImageUrl && !uploadedImage &&
+                    (<FormDescription
+                        className="text-light-secondary text-sm relative bottom-6">The button will be enabled after you have generated or uploaded an image
+                    </FormDescription>)}
             </form>
         </Form>
     )
