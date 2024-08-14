@@ -54,7 +54,7 @@ export async function POST(req: Request) {
             userId: evt.data.id,
             username: evt.data.username,
             imageUrl: evt.data.image_url,
-            emailaddress: evt.data.primary_email_address_id
+            emailaddress: evt.data.email_addresses[0]
         };
 
         await db.user.create({
@@ -63,8 +63,20 @@ export async function POST(req: Request) {
     }
 
     if (eventType === 'user.updated') {
-        // update user
+        const data = {
+            userId: evt.data.id,
+            username: evt.data.username,
+            imageUrl: evt.data.image_url,
+            emailaddress: evt.data.email_addresses[0]
+        };
+
+        await db.user.update({
+            where: {
+                userId: evt.data.id
+            },
+            data: data
+        });
     }
 
-    return new Response('', { status: 200 })
+    return new Response('OK', { status: 200 })
 }
