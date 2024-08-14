@@ -1,7 +1,7 @@
 
 import PodcastForm from '@/components/forms/PodcastForm'
 import React from 'react'
-import { getCategories } from '../actions/categories.actions'
+import { getCategories } from '../../actions/categories.actions'
 import { UserButton } from '@clerk/nextjs'
 
 const CreatePodcastPage = async () => {

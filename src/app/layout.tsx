@@ -35,12 +35,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <LeftBar />
-            <section className="xl:w-1/2 w-2/3 
-            bg-dark-primary h-screen overflow-y-auto">
-              {children}
-            </section>
-            <RightBar />
+            {children}
           </ThemeProvider>
         </body>
       </html>
