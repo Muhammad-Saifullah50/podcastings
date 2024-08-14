@@ -28,7 +28,6 @@ model Podcast {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   authorId           String
   podcastTitle       String
-  podcastVoice       String
   podcastDescription String
   podcastPrompt      String
   thumbnailImage     String

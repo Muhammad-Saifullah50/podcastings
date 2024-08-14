@@ -25,6 +25,7 @@ import Image from "next/image"
 import Loader from "../Loader"
 import { createPodcast } from "@/app/actions/podcast.actions"
 import { fileToDataUrl } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 interface PodcastFormProps {
     categories: {
@@ -49,7 +50,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
     const [uploadedImage, setUploadedImage] = useState(undefined)
     const [loading, setLoading] = useState(false)
 
-
+    const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof PodcastSchema>) {
         try {
@@ -63,9 +64,12 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                 podcastTitle: values.podcastTitle,
                 podcastCategory: values.podcastCategory,
                 podcastDescription: values.podcastDescription,
+                podcastPrompt: values.podcastPrompt,
                 thumbnailImage: values.thumbnailImage,
             };
-            await createPodcast(data)
+            const podcast = await createPodcast(JSON.stringify(data))
+            console.log(podcast)
+            router.push(`/podcasts/${podcast.id}`)
         } catch (error) {
             console.error(error)
         } finally {
