@@ -23,7 +23,8 @@ import { generateAIThumbnail } from "@/app/actions/image.actions"
 import { useState } from "react"
 import Image from "next/image"
 import Loader from "../Loader"
-import { createPodcast } from "@/app/actions/podcast .actions"
+import { createPodcast } from "@/app/actions/podcast.actions"
+import { fileToDataUrl } from "@/lib/utils"
 
 interface PodcastFormProps {
     categories: {
@@ -53,13 +54,17 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
     async function onSubmit(values: z.infer<typeof PodcastSchema>) {
         try {
             setLoading(true)
+
+            if (values.thumbnailImage instanceof File) {
+                const imageDataUrl = await fileToDataUrl(values.thumbnailImage);
+                form.setValue('thumbnailImage', imageDataUrl);
+            }
             const data = {
                 podcastTitle: values.podcastTitle,
                 podcastCategory: values.podcastCategory,
                 podcastDescription: values.podcastDescription,
                 thumbnailImage: values.thumbnailImage,
             };
-
             await createPodcast(data)
         } catch (error) {
             console.error(error)
