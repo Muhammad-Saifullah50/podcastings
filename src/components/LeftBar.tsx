@@ -45,6 +45,7 @@ const LeftBar = () => {
           )
         })}
       </div>
+
     </aside>
   )
 }
