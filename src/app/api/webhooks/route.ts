@@ -67,7 +67,7 @@ export async function POST(req: Request) {
             userId: evt.data.id,
             username: evt.data.username,
             imageUrl: evt.data.image_url,
-            emailaddress: evt.data.email_addresses[0]
+            emailaddress: evt.data.email_addresses[0]?.email_address
         };
 
         await db.user.update({
