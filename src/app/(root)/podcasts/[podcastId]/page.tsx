@@ -21,6 +21,14 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                 </div>
                 <div>
                     <h1>{podcast.podcastTitle}</h1>
+                    <Image
+                        src={author?.imageUrl || '/profile.svg'}
+                        alt={author.username}
+                        width={30}
+                        height={30}
+                        className='rounded-full'
+                    />
+                    <p>{author.username}</p>
                 </div>
             </section>
         </main>
