@@ -23,7 +23,6 @@ import { generateAIThumbnail } from "@/app/actions/image.actions"
 import { useState } from "react"
 import Image from "next/image"
 import Loader from "../Loader"
-import { createPodcast } from "@/app/actions/podcast.actions"
 import { fileToDataUrl } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
@@ -48,38 +47,14 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
 
     const [generatedImageUrl, setGeneratedImageUrl] = useState("")
     const [uploadedImage, setUploadedImage] = useState(undefined)
-    const [loading, setLoading] = useState(false)
+    const [formLoading, setFormLoading] = useState(false)
+    const [thumbnailLoading, setThumbnailLoading] = useState(false)
 
     const router = useRouter();
 
-    async function onSubmit(values: z.infer<typeof PodcastSchema>) {
-        try {
-            setLoading(true)
-
-            if (values.thumbnailImage instanceof File) {
-                const imageDataUrl = await fileToDataUrl(values.thumbnailImage);
-                form.setValue('thumbnailImage', imageDataUrl);
-            }
-            const data = {
-                podcastTitle: values.podcastTitle,
-                podcastCategory: values.podcastCategory,
-                podcastDescription: values.podcastDescription,
-                podcastPrompt: values.podcastPrompt,
-                thumbnailImage: values.thumbnailImage,
-            };
-            const podcast = await createPodcast(JSON.stringify(data))
-            console.log(podcast)
-            router.push(`/podcasts/${podcast.id}`)
-        } catch (error) {
-            console.error(error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
     const generateThumbnail = async (value: string) => {
         try {
-            setLoading(true)
+            setThumbnailLoading(true)
             const url = await generateAIThumbnail(value)
             setGeneratedImageUrl(url || '')
             form.setValue('thumbnailImage', url);
@@ -87,10 +62,50 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
         } catch (error) {
             console.error(error)
         } finally {
-            setLoading(false)
+            setThumbnailLoading(false)
         }
     }
 
+
+    async function onSubmit(values: z.infer<typeof PodcastSchema>) {
+        try {
+            setFormLoading(true)
+
+            let thumbnailImage = values.thumbnailImage;
+            if (thumbnailImage instanceof File || (thumbnailImage && typeof thumbnailImage === 'object' && 'path' in thumbnailImage)) {
+
+                thumbnailImage = await fileToDataUrl(thumbnailImage);
+                form.setValue('thumbnailImage', thumbnailImage);
+            }
+            const data = {
+                podcastTitle: values.podcastTitle,
+                category: values.podcastCategory,
+                podcastDescription: values.podcastDescription,
+                podcastPrompt: values.podcastPrompt,
+                thumbnailImage: thumbnailImage,
+            };
+
+            const request = await fetch('/api/podcasts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const podcast = await request.json();
+
+
+            router.push(`/podcasts/${podcast?.data?.id}`);
+            // error
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setFormLoading(false)
+        }
+    }
+
+  
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -202,7 +217,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                                             variant={'primary'}
                                             disabled={!field.value || field.value.length < 10}
                                             onClick={() => generateThumbnail(field.value as string)}>
-                                            {loading ? <Loader size={25} /> : 'Generate'}
+                                            {thumbnailLoading ? <Loader size={25} /> : 'Generate'}
                                         </Button>
                                         <FormDescription className="text-light-secondary text-sm">Due to rate limits, you can generate only once</FormDescription>
                                         <FormMessage />
@@ -242,7 +257,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                     type="submit"
                     variant={'primary'}
                     className="w-full">
-                    {loading ? <Loader size={25} /> : 'Submit & publish podcast'}
+                    {formLoading ? <Loader size={25} /> : 'Submit & publish podcast'}
                 </Button>
 
                 {!generatedImageUrl && !uploadedImage &&

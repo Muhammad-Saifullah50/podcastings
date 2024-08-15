@@ -1,10 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images:{
+     images:{
         remotePatterns:[
             {
                 protocol: 'https',
                 hostname: 'prlabsapi.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
             }
         ]
     }

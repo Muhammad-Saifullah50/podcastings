@@ -17,11 +17,13 @@ export const generateAIThumbnail = async (prompt: string) => {
     // const response = await fetch(url, options);
     // const result = await response.json();
 
-    // return result.generated_url
-    return 'https://prlabsapi.com:8005/matagimage?id=0BmGp5wnApPidu6NkfoK1723564183.5893078'
+    // return result.generated_image
+    return 'https://res.cloudinary.com/daqcrzwnr/image/upload/v1723720244/mryol8c6jsco4kkpajut.svg'
 
   } catch (error) {
     console.error(error);
   }
 }
+
+// have to fix for production
 
