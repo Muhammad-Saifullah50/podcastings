@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { Button } from "./ui/button"
 import Loader from "./Loader";
-import ReactAudioPlayer from "react-audio-player";
+import AudioPlayer from "./AudioPlayer";
+import { Podcast } from "@prisma/client";
 
 interface PodcastGeneratorProps {
   prompt: string,
@@ -14,7 +15,7 @@ interface PodcastGeneratorProps {
 const PodcastGenerator = ({ prompt, podcastId }: PodcastGeneratorProps) => {
 
   const [loading, setLoading] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [podcastData, setPodcastData] = useState<Podcast | null>(null);
   const handleClick = async () => {
     try {
       setLoading(true);
@@ -29,7 +30,7 @@ const PodcastGenerator = ({ prompt, podcastId }: PodcastGeneratorProps) => {
       const response = await request.json();
 
       if (response.status === 201) {
-        setAudioUrl(response.data.secure_url)
+        setPodcastData(response.data)
       }
     } catch (error) {
       console.error(error)
@@ -40,11 +41,9 @@ const PodcastGenerator = ({ prompt, podcastId }: PodcastGeneratorProps) => {
   }
   return (
     <div>
-      {audioUrl ? (
-        <ReactAudioPlayer
-          src={audioUrl}
-          controls
-          autoPlay
+      {podcastData ? (
+        <AudioPlayer
+        podcast={podcastData}
         />
       ) : (
         <Button

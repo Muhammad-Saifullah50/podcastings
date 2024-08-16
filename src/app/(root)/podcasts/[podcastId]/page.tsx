@@ -1,4 +1,5 @@
-import { getPodcastById } from '@/app/actions/podcasts.actions'
+import { getAudioUrlFromDb, getPodcastById } from '@/app/actions/podcasts.actions'
+import AudioPlayer from '@/components/AudioPlayer'
 import PodcastGenerator from '@/components/PodcastGenerator'
 import { Podcast, User } from '@prisma/client'
 import Image from 'next/image'
@@ -9,6 +10,7 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
     const podcast: Podcast & User = await getPodcastById(podcastId)
     //@ts-ignore
     const author = podcast.User;
+
     return (
         <main className='flex flex-col gap-4 p-6 w-full'>
             <h1 className='text-2xl font-bold'>Podcast Details</h1>
@@ -32,7 +34,6 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                             className='rounded-full'
                         />
                         <p className='text-white/80 font-normal'>{author.username}</p>
-                        {/* audioplayer */}
                     </div>
 
                 </div>
@@ -48,10 +49,15 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                     <h3 className='text-xl font-bold'>Transcription</h3>
                     <p className='font-medium opacity-80'>{podcast.podcastTranscription}</p>
 
-                    <PodcastGenerator
+                    {podcast.audioUrl ? (
+                        <AudioPlayer
+                            podcast={podcast}
+                        />
+                    ) : (<PodcastGenerator
                         prompt={podcast.podcastTranscription}
                         podcastId={podcast.id}
                     />
+                    )}
                 </section>
 
                 {podcast.thumbnailPrompt &&

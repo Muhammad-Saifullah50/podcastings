@@ -31,7 +31,7 @@ export const POST = async (request: NextRequest) => {
             resource_type: 'video'
         });
 
-        await db.podcast.update({
+        const podcast = await db.podcast.update({
             where: {
                 id: data.podcastId
             },
@@ -40,7 +40,7 @@ export const POST = async (request: NextRequest) => {
             }
         });
 
-        return NextResponse.json({ message: 'Podcast created successfully', data:uploadedAudioUrl, status: 201 })
+        return NextResponse.json({ message: 'Podcast created successfully', data: podcast, status: 201 })
     } catch (error) {
         console.error(error);
 
