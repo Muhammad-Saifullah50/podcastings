@@ -2,8 +2,7 @@ import { getDbUser } from "@/app/actions/user.actions";
 import cloudinary from "@/lib/cloudinary";
 import { db } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { User } from "@prisma/client";
-import { ObjectId } from 'mongodb';
+import { Podcast, User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -26,7 +25,7 @@ export const POST = async (request: NextRequest) => {
         })
         const imageUrl = result.secure_url;
 
-        const podcast = await db.podcast.create({
+        const podcast: Podcast = await db.podcast.create({
             data: {
                 ...data,
                 thumbnailImage: imageUrl,

@@ -12,7 +12,7 @@ const PodcastSchema = z.object({
   podcastDescription: z.string()
     .min(1, { message: "Description is required." }),
   
-  podcastPrompt: z.string()
+    podcastTranscription: z.string()
     .min(10, { message: "Podcast prompt must be at least 10 characters." })
     .optional(),
   

@@ -39,7 +39,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
             podcastTitle: "",
             podcastCategory: "",
             podcastDescription: "",
-            podcastPrompt: "",
+            podcastTranscription: "",
             thumbnailPrompt: '',
             thumbnailImage: undefined,
         }
@@ -81,7 +81,8 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                 podcastTitle: values.podcastTitle,
                 category: values.podcastCategory,
                 podcastDescription: values.podcastDescription,
-                podcastPrompt: values.podcastPrompt,
+                podcastTranscription: values.podcastTranscription,
+                thumbnailPrompt: values.thumbnailPrompt,
                 thumbnailImage: thumbnailImage,
             };
 
@@ -161,7 +162,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                         <FormItem>
                             <FormLabel className="font-bold">Podcast Description</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Write a short description for your podcast" {...field} />
+                                <Textarea placeholder="Write a short description for your podcast" {...field} rows={10}/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -169,12 +170,12 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                 />
                 <FormField
                     control={form.control}
-                    name="podcastPrompt"
+                    name="podcastTranscription"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-bold">AI prompt to generate podcast</FormLabel>
+                            <FormLabel className="font-bold">Transcript to generate podcast</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Write a promopt to generate your podcast" {...field} />
+                                <Textarea placeholder="Write a transcript to generate speech for your podcast" {...field} rows={15}/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -185,7 +186,8 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                         <TabsTrigger
                             value="thumbnail"
                             className="font-bold text-white"
-                            disabled={uploadedImage ? true : false}>AI prompt to generate thumbnail</TabsTrigger>
+                            disabled={uploadedImage ? true : false}>AI prompt to generate thumbnail
+                            </TabsTrigger>
                         <TabsTrigger
                             value="upload"
                             className="font-bold text-white"
@@ -215,7 +217,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                                         <Button
                                             type="button"
                                             variant={'primary'}
-                                            disabled={!field.value || field.value.length < 10}
+                                            disabled={!field.value || field.value.length < 10 || thumbnailLoading}
                                             onClick={() => generateThumbnail(field.value as string)}>
                                             {thumbnailLoading ? <Loader size={25} /> : 'Generate'}
                                         </Button>
