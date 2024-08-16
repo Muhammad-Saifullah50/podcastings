@@ -1,16 +1,17 @@
+'use server'
+
 import { db } from "@/lib/prisma"
 
-export const getUserByAuthorId = async (authorId: string) => {
+export const getDbUser = async (email: string) => {
 
     try {
-        const author =  await db.user.findUnique({
+        const user =  await db.user.findUnique({
             where: {
-                userId: authorId
+                emailaddress: email
             }
         });
-        return author
+        return user
     } catch (error) {
         console.error(error)
     }
-  
 }

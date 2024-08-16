@@ -26,7 +26,6 @@ model User {
 
 model Podcast {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  authorId           String
   podcastTitle       String
   podcastDescription String
   podcastPrompt      String
