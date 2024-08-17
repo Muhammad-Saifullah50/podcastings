@@ -51,6 +51,7 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                     {podcast.audioUrl ? (
                         <AudioPlayer
                             podcast={podcast}
+                            usage='podcastPage'
                         />
                     ) : (<PodcastGenerator
                         prompt={podcast?.podcastTranscription}
