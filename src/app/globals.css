@@ -6,3 +6,15 @@
   background: linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.06) 100%);
 
 }
+
+.rhap_container{
+ @apply bg-dark-secondary mt-4 rounded-full !important
+} ;
+
+.rhap_progress-bar ,.rhap_progress-indicator{
+  @apply bg-orange !important
+}
+/* $rhap_background-color: #fff !default; // Color of the player background
+$rhap_bar-color: #e4e4e4 !default;     // Color of volume and progress bar
+$rhap_time-color: #333 !default;       // Font color of current time and duration
+$rhap_font-family: inherit !default;  */

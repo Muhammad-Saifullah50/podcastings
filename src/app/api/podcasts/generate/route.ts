@@ -1,5 +1,7 @@
+import { getPodcastById } from "@/app/actions/podcasts.actions";
 import cloudinary from "@/lib/cloudinary";
 import { db } from "@/lib/prisma";
+import { Podcast, User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -40,7 +42,9 @@ export const POST = async (request: NextRequest) => {
             }
         });
 
-        return NextResponse.json({ message: 'Podcast created successfully', data: podcast, status: 201 })
+        const podcastWithUser: Podcast & { User: User } = await getPodcastById(podcast.id)
+
+        return NextResponse.json({ message: 'Podcast created successfully', data: podcastWithUser, status: 201 })
     } catch (error) {
         console.error(error);
 

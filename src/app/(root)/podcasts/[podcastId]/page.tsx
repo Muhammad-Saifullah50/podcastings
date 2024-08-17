@@ -1,4 +1,4 @@
-import { getAudioUrlFromDb, getPodcastById } from '@/app/actions/podcasts.actions'
+import { getPodcastById } from '@/app/actions/podcasts.actions'
 import AudioPlayer from '@/components/AudioPlayer'
 import PodcastGenerator from '@/components/PodcastGenerator'
 import { Podcast, User } from '@prisma/client'
@@ -7,8 +7,7 @@ import React from 'react'
 
 const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcastId: string } }) => {
 
-    const podcast: Podcast & User = await getPodcastById(podcastId)
-    //@ts-ignore
+    const podcast: Podcast & { User: User } = await getPodcastById(podcastId)
     const author = podcast.User;
 
     return (
@@ -17,23 +16,23 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
             <section className='flex gap-8 h-full'>
                 <div>
                     <Image
-                        src={podcast.thumbnailImage}
-                        alt={podcast.podcastTitle}
+                        src={podcast?.thumbnailImage}
+                        alt={podcast?.podcastTitle}
                         width={200}
                         height={200}
                     />
                 </div>
                 <div className='flex flex-col gap-4'>
-                    <h2 className='text-2xl font-bold'>{podcast.podcastTitle}</h2>
+                    <h2 className='text-2xl font-bold'>{podcast?.podcastTitle}</h2>
                     <div className='flex gap-4 items-center justify-start'>
                         <Image
-                            src={author.imageUrl || '/profile.svg'}
-                            alt={author.username}
+                            src={author?.imageUrl || '/profile.svg'}
+                            alt={author?.username}
                             width={30}
                             height={30}
                             className='rounded-full'
                         />
-                        <p className='text-white/80 font-normal'>{author.username}</p>
+                        <p className='text-white/80 font-normal'>{author?.username}</p>
                     </div>
 
                 </div>
@@ -54,8 +53,8 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                             podcast={podcast}
                         />
                     ) : (<PodcastGenerator
-                        prompt={podcast.podcastTranscription}
-                        podcastId={podcast.id}
+                        prompt={podcast?.podcastTranscription}
+                        podcastId={podcast?.id}
                     />
                     )}
                 </section>

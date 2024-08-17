@@ -1,6 +1,20 @@
 'use server'
 import { db } from "@/lib/prisma"
 
+export const getAllPodcasts = async () => {
+
+    try {
+        const podcasts = await db.podcast.findMany({
+            include: {
+                User: true
+            }
+        });
+        return podcasts
+    } catch (error) {
+        console.error(error)
+    }
+};
+
 export const getPodcastById = async (podcastId: string) => {
 
     try {
