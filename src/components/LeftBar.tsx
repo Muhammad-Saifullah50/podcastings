@@ -1,13 +1,18 @@
 'use client'
 import { sidebarLinks } from "@/data"
 import { cn } from "@/lib/utils"
+import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs"
+import { currentUser } from "@clerk/nextjs/server"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Button } from "./ui/button"
 
 const LeftBar = () => {
 
   const pathname = usePathname();
+
+  const { isSignedIn } = useAuth();
 
   return (
     <aside className="hidden md:flex md:w-1/3 xl:w-1/4  bg-dark-secondary flex-col h-screen overflow-hidden">
@@ -44,6 +49,19 @@ const LeftBar = () => {
             </Link>
           )
         })}
+      </div>
+{/* // TODO: working on signin signout btn  */}
+{/* // Todo: have to test ui of no podcasts found */}
+      <div>
+        {isSignedIn ? (
+          <Button variant={'primary'}>
+            <SignOutButton />
+          </Button>
+        ) : (
+          <Button variant={'primary'}>
+            <SignInButton />
+          </Button>
+        )}
       </div>
 
     </aside>

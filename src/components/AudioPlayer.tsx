@@ -34,7 +34,6 @@ const MyAudioPlayer = ({ podcast, usage }: AudioPlayerProps) => {
     <AudioPlayer
       src={podcast?.audioUrl!}
       style={playerStyles()}
-      
     />
   )
 }
