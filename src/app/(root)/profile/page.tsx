@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { currentUser } from '@clerk/nextjs/server'
 import { Podcast, User } from '@prisma/client'
 import Image from 'next/image'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
@@ -69,24 +70,28 @@ const ProfilePage = async () => {
                         </div>
                     ))}
                 </div>) : (
-                    <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col gap-8 items-center justify-center p-4'>
                         <Image
                             src={'/magnify.svg'}
                             alt='magnify'
-                            width={100}
-                            height={100}
+                            width={150}
+                            height={150}
                         />
 
-                        <p>You have not createed any podcasts yet</p>
+                        <p className='font-semibold'>You have not created any podcasts yet</p>
 
-                        <Button variant={`primary`} className='flex gap-4'>
-                            <Image
-                                src={'microphone.svg'}
-                                alt={'microphone'}
-                                width={20}
-                                height={20}
-                            />
-                            Create a new podcast
+                        <Button variant={`primary`}>
+                            <Link href={'/create-podcast'} className='flex gap-2'>
+                                <Image
+                                    src={'/microphone-2.svg'}
+                                    alt={'microphone'}
+                                    width={20}
+                                    height={20}
+                                />
+                                Create a new podcast
+
+                            </Link>
+
                         </Button>
                     </div>
                 )}

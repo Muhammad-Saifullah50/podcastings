@@ -2,7 +2,6 @@
 import { sidebarLinks } from "@/data"
 import { cn } from "@/lib/utils"
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs"
-import { currentUser } from "@clerk/nextjs/server"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -13,7 +12,6 @@ const LeftBar = () => {
   const pathname = usePathname();
 
   const { isSignedIn } = useAuth();
-
   return (
     <aside className="hidden md:flex md:w-1/3 xl:w-1/4  bg-dark-secondary flex-col h-screen overflow-hidden justify-between">
       <div>
@@ -53,16 +51,13 @@ const LeftBar = () => {
         </div>
       </div>
 
-      {/* // TODO: working on signin signout btn  */}
-      {/* // Todo: have to test ui of no podcasts found */}
-      {/* //todo: have to correct signin out state */}
       <div className="flex items-center justify-center p-4 w-full px-10">
         {isSignedIn ? (
-          <Button variant={'primary'} className="flex gap-4 w-full">
+          <Button variant={'primary'} className="flex gap-4 w-full font-bold">
             <Image src='/loginout.svg' width={20} height={20} alt="loginout" /><SignOutButton />
           </Button>
         ) : (
-          <Button variant={'primary'} className="flex gap-4 w-full">
+          <Button variant={'primary'} className="flex gap-4 w-full font-bold">
             <Image src='/loginout.svg' width={20} height={20} alt="loginout" />  <SignInButton />
           </Button>
         )}
