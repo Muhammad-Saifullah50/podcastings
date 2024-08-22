@@ -21,6 +21,7 @@ const DiscoverPage = async () => {
                 <div className='flex flex-wrap gap-4 '>
                     {podcasts.map((podcast: Podcast & { User: User }) => (
                         <PodcastCard
+                            key={podcast.id}
                             podcastData={podcast}
                             podcastUsername={podcast.User.username}
                         />

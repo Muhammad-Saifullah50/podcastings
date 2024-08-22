@@ -1,5 +1,6 @@
 import { getPodcastById } from '@/app/actions/podcasts.actions'
 import AudioPlayer from '@/components/AudioPlayer'
+import DropDownMenu from '@/components/DropDownMenu'
 import PodcastGenerator from '@/components/PodcastGenerator'
 import { Podcast, User } from '@prisma/client'
 import Image from 'next/image'
@@ -12,7 +13,18 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
 
     return (
         <main className='flex flex-col gap-4 p-6 w-full'>
-            <h1 className='text-2xl font-bold'>Podcast Details</h1>
+            <div className='flex justify-between items-center'>
+                <h1 className='text-2xl font-bold'>Podcast Details</h1>
+                <span>
+                    <Image
+                        src={'/headphone.svg'}
+                        width={20}
+                        height={20}
+                        alt='headphone'
+                    />
+                    <span className='font-bold'>{podcast.numberOfPlays}</span>
+                </span>
+            </div>
             <section className='flex gap-8 h-full'>
                 <div>
                     <Image
@@ -23,7 +35,10 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                     />
                 </div>
                 <div className='flex flex-col gap-4'>
-                    <h2 className='text-2xl font-bold'>{podcast?.podcastTitle}</h2>
+                    <div className='flex items-center justify-between'>
+                        <h2 className='text-2xl font-bold'>{podcast?.podcastTitle}</h2>
+                        <DropDownMenu/>
+                    </div>
                     <div className='flex gap-4 items-center justify-start'>
                         <Image
                             src={author?.imageUrl || '/profile.svg'}

@@ -32,6 +32,7 @@ model Podcast {
   thumbnailPrompt      String?
   thumbnailImage       String
   audioUrl             String?
+  numberOfPlays        Int @default(0)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   category             String

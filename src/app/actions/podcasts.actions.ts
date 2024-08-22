@@ -89,3 +89,38 @@ export const getTopPodcasters = async () => {
         console.error(error)
     }
 }
+
+export const incrementNoOfPlays = async (podcastId: string) => {
+    try {
+        const podcast = await db.podcast.update({
+            where: {
+                id: podcastId
+            },
+            data: {
+                numberOfPlays: {
+                    increment: 1
+                }
+            }
+        });
+        return podcast
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getTrendingPodcasts = async () => {
+    try {
+        const podcasts = await db.podcast.findMany({
+            orderBy: {
+                numberOfPlays: 'desc'
+            },
+            include: {
+                User: true
+            },
+            take: 4
+        });
+        return podcasts
+    } catch (error) {
+        console.error(error)
+    }
+}

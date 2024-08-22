@@ -23,3 +23,18 @@ export const fileToDataUrl = (file: File): Promise<string> => {
 
   });
 };
+
+export const getAudioDuration = (audioUrl: string): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio()
+    audio.src = audioUrl
+
+    audio.addEventListener('loadedmetadata', () => {
+      resolve(audio.duration)
+    })
+
+    audio.addEventListener('error', (error) => {
+      reject(new Error('Failed to load audio file'))
+    })
+  })
+}
