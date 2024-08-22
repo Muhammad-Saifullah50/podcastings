@@ -13,8 +13,8 @@ import { useState } from "react"
 import MyAudioPlayer from "./AudioPlayer"
 
 type DropDownMenuProps = {
-    podcastId: string
-    setPlaying: (playing: boolean) => void
+    podcastId?: string
+    setPlaying?: (playing: boolean) => void
 };
 
 const DropDownMenu = ({ podcastId, setPlaying }: DropDownMenuProps) => {
@@ -33,10 +33,13 @@ const DropDownMenu = ({ podcastId, setPlaying }: DropDownMenuProps) => {
                 <DropdownMenuContent>
                     <DropdownMenuLabel>More Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                        onClick={() => setPlaying(true)}>
-                        Play
-                    </DropdownMenuItem>
+                    {setPlaying && (
+                        <DropdownMenuItem
+                            onClick={() => setPlaying(true)}>
+                            Play
+                        </DropdownMenuItem>
+                    )}
+
                     <DropdownMenuItem
                         onClick={() => router.push(`/podcasts/${podcastId}`)}>
                         Details
