@@ -10,7 +10,6 @@ import React from 'react'
 
 const ProfilePage = async () => {
     const currUser = await currentUser()
-
     if (!currUser) redirect('/sign-in');
 
     const dbUser: User & { podcasts: Podcast[] } = await getDbUserWithPodcasts(currUser?.emailAddresses[0].emailAddress);

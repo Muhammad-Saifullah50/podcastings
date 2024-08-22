@@ -3,9 +3,7 @@ import RightBar from "@/components/RightBar"
 import { currentUser } from "@clerk/nextjs/server"
 
 const MainLayout = async ({ children }: { children: React.ReactNode }) => {
-
-    const currUser = await currentUser()
-    // todo:fix currentUSer
+const currUser = await currentUser()
     return (
         <main className="flex w-full h-screen overflow-hidden">
             <LeftBar />
