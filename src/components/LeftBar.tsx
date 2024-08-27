@@ -13,31 +13,8 @@ import Loader from "./Loader"
 const LeftBar = () => {
 
   const pathname = usePathname();
-  const [loading, setLoading] = useState(false);
-
   const { isSignedIn } = useAuth();
 
-  const handleSignIn = async () => {
-    setLoading(true);
-    try {
-      await handleSignIn();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignOut = async () => {
-    setLoading(true);
-    try {
-      await handleSignOut();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <>
       <SideBarSheet />
@@ -82,35 +59,14 @@ const LeftBar = () => {
         <div className="flex items-center justify-center p-4 w-full px-10">
           {isSignedIn ? (
             <Button
-              variant="primary"
+              variant={'primary'}
               className="flex gap-4 w-full font-bold"
-              onClick={handleSignOut}
-              disabled={loading}
             >
-              {loading ? (
-                <Loader size={25}/>
-              ) : (
-                <>
-                  <Image src="/loginout.svg" width={20} height={20} alt="loginout" />
-                  Sign Out
-                </>
-              )}
+              <Image src='/loginout.svg' width={20} height={20} alt="loginout" /><SignOutButton />
             </Button>
           ) : (
-            <Button
-              variant="primary"
-              className="flex gap-4 w-full font-bold"
-              onClick={handleSignIn}
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader size={25}/>
-              ) : (
-                <>
-                  <Image src="/loginout.svg" width={20} height={20} alt="loginout" />
-                  Sign In
-                </>
-              )}
+            <Button variant={'primary'} className="flex gap-4 w-full font-bold">
+              <Image src='/loginout.svg' width={20} height={20} alt="loginout" />  <SignInButton />
             </Button>
           )}
         </div>
