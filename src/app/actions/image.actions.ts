@@ -14,16 +14,12 @@ export const generateAIThumbnail = async (prompt: string) => {
   };
 
   try {
-    // const response = await fetch(url, options);
-    // const result = await response.json();
+    const response = await fetch(url, options);
+    const result = await response.json();
 
-    // return result.generated_image
-    return 'https://res.cloudinary.com/daqcrzwnr/image/upload/v1723720244/mryol8c6jsco4kkpajut.svg'
+    return result.generated_image
 
   } catch (error) {
     console.error(error);
   }
 }
-
-// have to fix for production
-

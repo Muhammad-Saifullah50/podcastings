@@ -286,7 +286,7 @@ const PodcastForm = ({ action, podcast, categories }: PodcastFormProps) => {
                 </Tabs>
 
                 <Button
-                    disabled={!generatedImageUrl && !uploadedImage && !podcast?.thumbnailImage}
+                    disabled={!generatedImageUrl && !uploadedImage && !podcast?.thumbnailImage || formLoading}
                     type="submit"
                     variant={'primary'}
                     className="w-full">

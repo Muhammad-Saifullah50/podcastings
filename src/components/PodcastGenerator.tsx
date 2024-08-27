@@ -45,6 +45,7 @@ const PodcastGenerator = ({ prompt, podcastId }: PodcastGeneratorProps) => {
     <div>
       {podcastData ? (
         <MyAudioPlayer
+        usage="podcastPage"
         podcast={podcastData}
         />
       ) : (

@@ -21,12 +21,10 @@ export const POST = async (request: NextRequest) => {
     };
 
     try {
-        // const response = await fetch(url, options);
-        // const result = await response.json();
+        const response = await fetch(url, options);
+        const result = await response.json();
 
-        // const audioUrl = result.url;
-
-        const audioUrl = 'https://audiospace-1-r4970717.deta.app/getvoice?id=WXL6F76CA5579SPN8UCJ1723807218.2815068'
+        const audioUrl = result.url;
 
         const uploadedAudioUrl = await cloudinary.uploader.upload(audioUrl, {
             use_filename: true,
