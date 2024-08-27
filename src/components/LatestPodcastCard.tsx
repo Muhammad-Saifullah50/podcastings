@@ -31,10 +31,11 @@ const LatestPodcastCard = ({ podcastData, index }: LatestPodcastCardProps) => {
                     alt={podcastData.podcastTitle}
                     width={50}
                     height={50}
+                    className='w-10 h-10'
                 />
                 <h3 className='font-bold line-clamp-1'>{podcastData.podcastTitle}</h3>
             </div>
-            <div className='flex gap-3 min-w-8'>
+            <div className='flex gap-1 md:gap-3 min-w-8'>
                 <Image
                     src={'/headphone.svg'}
                     alt='headphone'
@@ -43,7 +44,7 @@ const LatestPodcastCard = ({ podcastData, index }: LatestPodcastCardProps) => {
                 />
                 <span>{podcastData.numberOfPlays}</span>
             </div>
-            <div className='flex gap-3 min-w-8'>
+            <div className='flex gap-1 md:gap-3 min-w-8'>
                 <Image
                     src={'/clock.svg'}
                     alt='clock'
@@ -54,6 +55,7 @@ const LatestPodcastCard = ({ podcastData, index }: LatestPodcastCardProps) => {
             </div>
             <div className='flex items-center'>
                 <DropDownMenu
+                    usage='play'
                     podcastId={podcastData.id}
                     setPlaying={setPlaying}
                 />
@@ -65,7 +67,7 @@ const LatestPodcastCard = ({ podcastData, index }: LatestPodcastCardProps) => {
                     usage='bottom'
                     //@ts-ignore
                     podcast={podcastData}
-                    
+
                 />
             </div>
         )}

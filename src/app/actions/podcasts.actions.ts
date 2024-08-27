@@ -16,7 +16,6 @@ export const getAllPodcasts = async () => {
 };
 
 export const getPodcastById = async (podcastId: string) => {
-
     try {
         const podcast = await db.podcast.findUnique({
             where: {
@@ -123,4 +122,21 @@ export const getTrendingPodcasts = async () => {
     } catch (error) {
         console.error(error)
     }
+}
+
+export const deletePodcast = async (userId: string, podcastId: string) => {
+    try {
+        if (!userId) {
+            throw new Error("User not found")
+        };
+        const podcast = await db.podcast.delete({
+            where: {
+                id: podcastId
+            }
+        });
+        return podcast
+    } catch (error) {
+        console.error(error)
+    }
+    
 }

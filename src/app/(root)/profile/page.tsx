@@ -41,7 +41,7 @@ const ProfilePage = async () => {
                         <p className='font-normal text-white/80'><span className='font-semibold text-white'>1011</span> monthly listeners</p>
                     </div>
 
-                    <Button variant={'primary'} className='flex justify-center gap-4'>
+                    <Button variant={'primary'} className='flex justify-center gap-4 max-md:hidden'>
                         <Image
                             src={'/play.svg'}
                             width={20}
@@ -52,7 +52,15 @@ const ProfilePage = async () => {
                     </Button>
                 </div>
             </section>
-
+            <Button variant={'primary'} className='flex justify-center gap-4 md:hidden w-full'>
+                <Image
+                    src={'/play.svg'}
+                    width={20}
+                    height={20}
+                    alt='play'
+                />
+                Play a random podcast
+            </Button>
             <section>
                 <div>
                     <h1 className='text-2xl font-bold'>All Podcasts</h1>

@@ -14,7 +14,7 @@ export default async function Home() {
       <section className="flex flex-col gap-4">
         <h2 className='text-2xl font-bold'>Trending Podcasts</h2>
 
-        <div className="flex items-center justify-start w-full">
+        <div className="flex items-center flex-wrap justify-start w-full">
           {trendingPodcasts.map((podcast: Podcast & { User: { username: string } }) => (
             <PodcastCard
               key={podcast.id}
@@ -50,7 +50,7 @@ export default async function Home() {
       <section className="flex flex-col gap-4">
         <h2 className='text-2xl font-bold'>Popular Podcasts</h2>
 
-        <div className="flex items-center justify-start w-full">
+        <div className="flex items-center justify-start w-full flex-wrap">
           {trendingPodcasts.map((podcast: Podcast & { User: { username: string } }) => (
             <PodcastCard
               key={podcast.id}

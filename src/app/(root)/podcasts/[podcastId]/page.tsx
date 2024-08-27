@@ -2,6 +2,7 @@ import { getPodcastById } from '@/app/actions/podcasts.actions'
 import AudioPlayer from '@/components/AudioPlayer'
 import DropDownMenu from '@/components/DropDownMenu'
 import PodcastGenerator from '@/components/PodcastGenerator'
+import { currentUser } from '@clerk/nextjs/server'
 import { Podcast, User } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -9,20 +10,22 @@ import React from 'react'
 const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcastId: string } }) => {
 
     const podcast: Podcast & { User: User } = await getPodcastById(podcastId)
-    const author = podcast.User;
+    const author = podcast?.User;
 
+    const currUser = await currentUser()
+    const isAuthor = currUser?.id === podcast?.userId
     return (
         <main className='flex flex-col gap-4 p-6 w-full'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-2xl font-bold'>Podcast Details</h1>
-                <span>
+                <span className='flex gap-2 items-center'>
+                    <span className='font-bold'>{podcast.numberOfPlays}</span>
                     <Image
                         src={'/headphone.svg'}
-                        width={20}
-                        height={20}
+                        width={15}
+                        height={15}
                         alt='headphone'
                     />
-                    <span className='font-bold'>{podcast.numberOfPlays}</span>
                 </span>
             </div>
             <section className='flex gap-8 h-full'>
@@ -32,12 +35,20 @@ const PodcastDetailsPage = async ({ params: { podcastId } }: { params: { podcast
                         alt={podcast?.podcastTitle}
                         width={200}
                         height={200}
+                        className='min-h-36 min-w-36 '
                     />
                 </div>
                 <div className='flex flex-col gap-4'>
                     <div className='flex items-center justify-between'>
-                        <h2 className='text-2xl font-bold'>{podcast?.podcastTitle}</h2>
-                        <DropDownMenu/>
+                        <h2 className='text-xl md:text-2xl font-bold'>{podcast?.podcastTitle}</h2>
+                        {isAuthor && (
+                            <DropDownMenu
+                                usage='actions'
+                                podcastId={podcast.id}
+                                userId={currUser?.id}
+                            />
+                        )}
+
                     </div>
                     <div className='flex gap-4 items-center justify-start'>
                         <Image

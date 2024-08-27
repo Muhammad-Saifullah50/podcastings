@@ -9,7 +9,7 @@ const CreatePodcastPage = async () => {
   return (
     <main className='flex flex-col gap-4 w-full p-6' >
       <h2 className='text-2xl font-bold'>Create a Podcast</h2>
-      <PodcastForm categories={categories} />
+      <PodcastForm categories={categories} action='create'/>
     </main>
   )
 }

@@ -41,7 +41,7 @@ const FileUploader = ({ files, onChange, setUploadedImage, uploadedImage }: File
                         className='object-contain mx-auto'
                     />
                 ) : (
-                    <div className='flex flex-col gap-2 p-8 border border-dashed border-dark-secondary items-center justify-center h-60'>
+                    <div className='flex flex-col gap-2 p-8 border border-dashed border-dark-secondary items-center justify-center h-60 '>
                         <Image
                             src={'/upload.svg'}
                             alt="Upload"
@@ -52,7 +52,7 @@ const FileUploader = ({ files, onChange, setUploadedImage, uploadedImage }: File
                             <span className='text-orange font-semibold'>Click to Upload {' '}</span>
                             or drag and drop
                         </p>
-                        <p className='text-light-secondary text-sm font-normal'>SVG, PNG, JPG or GIF (max. 1080x1080px)</p>
+                        <p className='text-light-secondary text-sm font-normal text-center'>SVG, PNG, JPG or GIF (max. 1080x1080px)</p>
                     </div>
                 )
             }

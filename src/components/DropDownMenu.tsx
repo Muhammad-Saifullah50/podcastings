@@ -1,4 +1,5 @@
 'use client'
+import { deletePodcast } from "@/app/actions/podcasts.actions";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,41 +10,60 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
-import MyAudioPlayer from "./AudioPlayer"
 
 type DropDownMenuProps = {
-    podcastId?: string
+    podcastId: string
     setPlaying?: (playing: boolean) => void
+    usage: 'actions' | 'play'
+    userId?: string
 };
 
-const DropDownMenu = ({ podcastId, setPlaying }: DropDownMenuProps) => {
+const DropDownMenu = ({ usage, podcastId, userId, setPlaying }: DropDownMenuProps) => {
     const router = useRouter();
+
+    const handleDelete = async () => {
+        await deletePodcast(podcastId, userId!)
+        router.push('/podcasts')
+    }
     return (
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <Image
-                        src={'/dots.svg'}
+                        src={usage === 'play' ? '/dots.svg' : '/dotsvertical.svg'}
                         alt='dots'
                         width={20}
                         height={20}
+                        className="max-h-5"
+
                     />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>More Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {setPlaying && (
-                        <DropdownMenuItem
-                            onClick={() => setPlaying(true)}>
-                            Play
-                        </DropdownMenuItem>
-                    )}
+                    {usage === 'play' ? (
+                        <>
+                            {setPlaying && (
+                                <DropdownMenuItem
+                                    onClick={() => setPlaying(true)}>
+                                    Play
+                                </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                                onClick={() => router.push(`/podcasts/${podcastId}`)}>
+                                Details
+                            </DropdownMenuItem>
+                        </>) : (<>
+                            <DropdownMenuItem onClick={() => router.push(`/edit-podcast/${podcastId}`)}>
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </DropdownMenuItem>
+                        </>)}
 
-                    <DropdownMenuItem
-                        onClick={() => router.push(`/podcasts/${podcastId}`)}>
-                        Details
-                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 

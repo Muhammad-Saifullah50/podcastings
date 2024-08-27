@@ -25,23 +25,26 @@ import Image from "next/image"
 import Loader from "../Loader"
 import { fileToDataUrl } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import { Podcast } from "@prisma/client"
 
 interface PodcastFormProps {
     categories: {
         id: string
         name: string
     }[]
+    action: 'create' | 'edit';
+    podcast: Podcast;
 }
-const PodcastForm = ({ categories }: PodcastFormProps) => {
+const PodcastForm = ({ action, podcast, categories }: PodcastFormProps) => {
     const form = useForm<z.infer<typeof PodcastSchema>>({
         resolver: zodResolver(PodcastSchema),
         defaultValues: {
-            podcastTitle: "",
-            podcastCategory: "",
-            podcastDescription: "",
-            podcastTranscription: "",
-            thumbnailPrompt: '',
-            thumbnailImage: undefined,
+            podcastTitle: podcast?.podcastTitle || "",
+            podcastCategory: podcast?.category || "",
+            podcastDescription: podcast?.podcastDescription || "",
+            podcastTranscription: podcast?.podcastTranscription || "",
+            thumbnailPrompt: podcast?.thumbnailPrompt || '',
+            thumbnailImage: podcast?.thumbnailImage || undefined,
         }
     });
 
@@ -86,19 +89,47 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                 thumbnailImage: thumbnailImage,
             };
 
-            const request = await fetch('/api/podcasts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            if (action === 'create') {
+                const request = await fetch('/api/podcasts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
 
-            const podcast = await request.json();
+                const podcast = await request.json();
 
 
-            router.push(`/podcasts/${podcast?.data?.id}`);
-            // error
+                router.push(`/podcasts/${podcast?.data?.id}`);
+            };
+
+            const updatedData = {
+                id: podcast.id,
+                podcastTitle: values.podcastTitle,
+                category: values.podcastCategory,
+                podcastDescription: values.podcastDescription,
+                podcastTranscription: values.podcastTranscription,
+                thumbnailPrompt: values.thumbnailPrompt,
+                thumbnailImage: thumbnailImage,
+            }
+
+            if (action === 'edit') {
+                const request = await fetch('/api/podcasts', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedData),
+                });
+
+                const podcast = await request.json();
+
+
+                router.push(`/podcasts/${podcast?.data?.id}`);
+            }
+
+            //todo: error dispplay through toast
         } catch (error) {
             console.error(error)
         } finally {
@@ -106,7 +137,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
         }
     }
 
-  
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -162,7 +193,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                         <FormItem>
                             <FormLabel className="font-bold">Podcast Description</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Write a short description for your podcast" {...field} rows={10}/>
+                                <Textarea placeholder="Write a short description for your podcast" {...field} rows={10} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -175,22 +206,22 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                         <FormItem>
                             <FormLabel className="font-bold">Transcript to generate podcast</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Write a transcript to generate speech for your podcast" {...field} rows={15}/>
+                                <Textarea placeholder="Write a transcript to generate speech for your podcast" {...field} rows={15} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <Tabs defaultValue="thumbnail">
-                    <TabsList >
+                    <TabsList className="flex-col md:flex gap-4">
                         <TabsTrigger
                             value="thumbnail"
-                            className="font-bold text-white"
+                            className="font-bold text-white flex justify-start"
                             disabled={uploadedImage ? true : false}>AI prompt to generate thumbnail
-                            </TabsTrigger>
+                        </TabsTrigger>
                         <TabsTrigger
                             value="upload"
-                            className="font-bold text-white"
+                            className="font-bold text-white flex justify-start"
                             disabled={generatedImageUrl ? true : false}>Upload custom image</TabsTrigger>
                     </TabsList>
 
@@ -240,7 +271,7 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                                             //@ts-ignore
                                             files={field.value}
                                             onChange={field.onChange}
-                                            uploadedImage={uploadedImage}
+                                            uploadedImage={uploadedImage || podcast?.thumbnailImage}
                                             setUploadedImage={setUploadedImage} />
                                     </FormControl>
                                     {uploadedImage && (
@@ -255,11 +286,11 @@ const PodcastForm = ({ categories }: PodcastFormProps) => {
                 </Tabs>
 
                 <Button
-                    disabled={!generatedImageUrl && !uploadedImage}
+                    disabled={!generatedImageUrl && !uploadedImage && !podcast?.thumbnailImage}
                     type="submit"
                     variant={'primary'}
                     className="w-full">
-                    {formLoading ? <Loader size={25} /> : 'Submit & publish podcast'}
+                    {formLoading ? <Loader size={25} /> : `Submit & ${action === 'create' ? 'publish' : 'edit'} podcast`}
                 </Button>
 
                 {!generatedImageUrl && !uploadedImage &&
