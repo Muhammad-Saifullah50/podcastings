@@ -33,7 +33,7 @@ interface PodcastFormProps {
         name: string
     }[]
     action: 'create' | 'edit';
-    podcast: Podcast;
+    podcast?: Podcast;
 }
 const PodcastForm = ({ action, podcast, categories }: PodcastFormProps) => {
     const form = useForm<z.infer<typeof PodcastSchema>>({
@@ -105,7 +105,7 @@ const PodcastForm = ({ action, podcast, categories }: PodcastFormProps) => {
             };
 
             const updatedData = {
-                id: podcast.id,
+                id: podcast?.id,
                 podcastTitle: values.podcastTitle,
                 category: values.podcastCategory,
                 podcastDescription: values.podcastDescription,
