@@ -213,7 +213,7 @@ const PodcastForm = ({ action, podcast, categories }: PodcastFormProps) => {
                     )}
                 />
                 <Tabs defaultValue="thumbnail">
-                    <TabsList className="flex-col md:flex gap-4">
+                    <TabsList className="flex flex-col md:flex-row gap-4">
                         <TabsTrigger
                             value="thumbnail"
                             className="font-bold text-white flex justify-start"
