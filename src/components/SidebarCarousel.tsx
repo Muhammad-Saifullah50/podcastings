@@ -11,7 +11,6 @@ import Image from "next/image"
 
 
 const SidebarCarousel = ({ latestPodcasts }: { latestPodcasts: Podcast[] }) => {
-  // console.log(latestPodcasts)
   return (
     <Carousel
       plugins={[

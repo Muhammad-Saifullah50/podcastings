@@ -42,7 +42,6 @@ export const getAudioUrlFromDb = async (podcastId: string) => {
                 audioUrl: true
             }
         });
-        console.log(podcast)
         return podcast?.audioUrl
     } catch (error) {
         console.error(error)

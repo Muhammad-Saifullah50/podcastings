@@ -10,13 +10,12 @@ export const generateAIThumbnail = async (prompt: string) => {
       'x-rapidapi-host': process.env.RAPID_API_HOST!,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ text: prompt })
+    body: JSON.stringify({ text: `${prompt} The thumbnail should not contain a face of a human or animal` })
   };
 
   try {
     const response = await fetch(url, options);
     const result = await response.json();
-
     return result.generated_image
 
   } catch (error) {

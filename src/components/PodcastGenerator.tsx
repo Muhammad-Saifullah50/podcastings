@@ -32,7 +32,6 @@ const PodcastGenerator = ({ prompt, podcastId }: PodcastGeneratorProps) => {
 
       if (response.status === 201) {
         setPodcastData(response.data)
-        console.log(podcastData)
       }
     } catch (error) {
       console.error(error)

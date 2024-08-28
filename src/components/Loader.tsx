@@ -8,7 +8,7 @@ const Loader = ({ size }: { size?: number }) => {
             style={{ height: size ? `${size}px` : undefined, width: size ? `${size}px` : undefined }}
         >
             <Image
-                src={'/loader.svg'}
+                src={'/loader-orange.svg'}
                 alt="loader"
                 width={size || 80}
                 height={size || 80}
